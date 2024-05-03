@@ -1,0 +1,24 @@
+{
+    "manifest_version": 3,
+    "name": "Disrupt the Peace",
+    "description": "Plays a random meme sound every minute.",
+    "version": "1.0",
+    "action": {
+      "default_popup": "index.html",
+      "default_icon": "/images/disruptthepeace.png"
+    },
+    "icons": {
+        "16": "images/disruptthepeace.png",
+        "32": "images/disruptthepeace.png",
+        "48": "images/disruptthepeace.png",
+        "128": "images/disruptthepeace.png"
+    },
+    "background": {
+        "service_worker": "scripts/background.js",
+        "type": "module"
+    },
+    "permissions": [
+        "offscreen",
+        "storage"
+    ]
+  }

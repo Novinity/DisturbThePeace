@@ -16,14 +16,14 @@ const sounds = [
     '../sounds/villager.wav',
     '../sounds/vine_boom.wav',
     '../sounds/waa.wav',
-    '../sounds/what_the_dog_doing.wav',
-    '../sounds/thunder_sound.wav'
+    '../sounds/what_the_dog_doing.wav'
 ];
 
 let curTimeout = null;
 
 let enabled = true;
 let maxInterval = 60000;
+let volume = 0.5;
 
 const storageCache = { };
 const initStorageCache = chrome.storage.sync.get().then((items) => {
@@ -31,6 +31,9 @@ const initStorageCache = chrome.storage.sync.get().then((items) => {
     if (storageCache.options) {
         if (storageCache.options.interval != null) {
             maxInterval = storageCache.options.interval * 1000;
+        }
+        if (storageCache.options.volume != null) {
+            volume = storageCache.options.volume / 100;
         }
 
         if (!storageCache.options.enable) {
@@ -65,12 +68,13 @@ async function createOffScreen() {
 
 function playRandomSound() {
     let pick = sounds[Math.floor(Math.random() * sounds.length)];
-    playSound(pick, 0.5);
+    playSound(pick, volume);
 }
 
 function IntervalFunc() {
     if (!enabled) return;
     playRandomSound();
+    console.log(volume);
     if (!enabled) return;
     console.log(maxInterval);
     curTimeout = setTimeout(() => {
@@ -82,6 +86,7 @@ chrome.storage.onChanged.addListener((changes, area) => {
     if (area === 'sync' && changes.options?.newValue) {
         enabled = Boolean(changes.options.newValue.enable);
         maxInterval = Number(changes.options.newValue.interval * 1000);
+        volume = Number(changes.options.newValue.volume / 100);
         if (curTimeout != null) {
             clearTimeout(curTimeout);
             curTimeout = null
